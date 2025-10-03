@@ -1,0 +1,55 @@
+# Spam Detection Analysis
+
+This repository contains a Python script to analyze a dataset of emails and determine whether each email is spam based on features like word count, links, capital words, and spam word count. The analysis demonstrates basic data manipulation, statistics, and a simple rule-based spam detection in Python.
+
+## Dataset
+
+The dataset contains the following columns:
+
+- `words`: Number of words in the email.
+- `links`: Number of links in the email.
+- `capital_words`: Number of capitalized words.
+- `spam_word_count`: Number of spammy words detected.
+- `is_spam`: Target variable (1 if spam, 0 if not).
+
+Example of the dataset:
+
+| words | links | capital_words | spam_word_count | is_spam |
+|-------|-------|---------------|----------------|---------|
+| 63    | 6     | 9             | 8              | 1       |
+| 260   | 2     | 10            | 2              | 0       |
+| 373   | 4     | 1             | 3              | 0       |
+| 73    | 4     | 10            | 7              | 1       |
+| 110   | 2     | 5             | 1              | 0       |
+
+## Python Code
+
+```python
+import pandas as pd
+
+# Load dataset (assuming CSV format)
+data = pd.read_csv("emails.csv")
+
+# Display the first few rows
+print(data.head())
+
+# Basic statistics
+print("\nBasic Statistics:")
+print(data.describe())
+
+# Count of spam and non-spam emails
+print("\nSpam vs Non-Spam Counts:")
+print(data['is_spam'].value_counts())
+
+# Calculate the correlation between features and spam label
+correlation = data.corr()['is_spam']
+print("\nCorrelation with 'is_spam':")
+print(correlation)
+
+# Simple rule-based spam detection (example)
+# Mark as spam if spam_word_count > 5 or links > 5
+data['predicted_spam'] = ((data['spam_word_count'] > 5) | (data['links'] > 5)).astype(int)
+
+# Evaluate simple accuracy
+accuracy = (data['is_spam'] == data['predicted_spam']).mean()
+print(f"\nSimple rule-based accuracy: {accuracy:.2f}")
